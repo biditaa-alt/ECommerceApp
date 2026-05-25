@@ -58,7 +58,7 @@ const mockProducts = [
     thumbnail: 'https://cdn.dummyjson.com/products/images/beauty/Red%20Nail%20Polish/thumbnail.png',
   },
   {
-    id: 6,
+    id: 7,
     title: 'Calvin Klein CK One',
     description: 'CK One by Calvin Klein is a classic unisex fragrance, known for its fresh and clean scent.',
     price: 49.99,
