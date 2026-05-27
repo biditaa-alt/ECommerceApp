@@ -3,27 +3,44 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import CartScreen from '../screens/CartScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import ProductListScreen from '../screens/ProductListScreen';
 import { selectCartCount } from '../redux/cartSlice';
+import styles from './AppNavigation.styles';
 
 const Stack = createNativeStackNavigator();
 const AUTH_KEY = 'auth_credentials';
 
+function AppLoader() {
+	return (
+		<View style={styles.loaderContainer}>
+			<ActivityIndicator size="large" color="#111827" />
+		</View>
+	);
+}
+
 function HeaderActions({ onLogout, onGoToCart, cartCount }) {
 	return (
 		<View style={styles.headerActions}>
-			<Pressable onPress={onGoToCart} style={styles.cartBadge}>
+			<Pressable style={styles.cartBadge} onPress={onGoToCart}>
 				<Text style={styles.cartBadgeText}>Cart {cartCount}</Text>
 			</Pressable>
-			<Pressable onPress={onLogout} style={styles.logoutButton}>
+			<Pressable style={[styles.logoutButton, styles.headerActionSpacing]} onPress={onLogout}>
 				<Text style={styles.logoutText}>Logout</Text>
 			</Pressable>
 		</View>
+	);
+}
+
+function CartHeaderButton({ onPress, cartCount }) {
+	return (
+		<Pressable onPress={onPress}>
+			<Text style={styles.detailCartText}>Cart {cartCount}</Text>
+		</Pressable>
 	);
 }
 
@@ -59,11 +76,7 @@ function AppNavigation() {
 	};
 
 	if (authLoading) {
-		return (
-			<View style={styles.loaderContainer}>
-				<ActivityIndicator size="large" color="#111827" />
-			</View>
-		);
+		return <AppLoader />;
 	}
 
 	return (
@@ -95,9 +108,10 @@ function AppNavigation() {
 							options={({ navigation }) => ({
 								title: 'Product Details',
 								headerRight: () => (
-									<Pressable onPress={() => navigation.navigate('Cart')}>
-										<Text style={styles.detailCartText}>Cart {cartCount}</Text>
-									</Pressable>
+									<CartHeaderButton
+										cartCount={cartCount}
+										onPress={() => navigation.navigate('Cart')}
+									/>
 								),
 							})}
 						/>
@@ -112,43 +126,5 @@ function AppNavigation() {
 		</NavigationContainer>
 	);
 }
-
-const styles = StyleSheet.create({
-	loaderContainer: {
-		alignItems: 'center',
-		flex: 1,
-		justifyContent: 'center',
-	},
-	headerActions: {
-		alignItems: 'center',
-		flexDirection: 'row',
-		gap: 8,
-	},
-	cartBadge: {
-		backgroundColor: '#111827',
-		borderRadius: 20,
-		paddingHorizontal: 10,
-		paddingVertical: 5,
-	},
-	cartBadgeText: {
-		color: '#ffffff',
-		fontSize: 12,
-		fontWeight: '700',
-	},
-	logoutButton: {
-		paddingHorizontal: 4,
-		paddingVertical: 3,
-	},
-	logoutText: {
-		color: '#b91c1c',
-		fontSize: 13,
-		fontWeight: '600',
-	},
-	detailCartText: {
-		color: '#111827',
-		fontSize: 14,
-		fontWeight: '700',
-	},
-});
 
 export default AppNavigation;

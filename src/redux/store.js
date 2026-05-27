@@ -12,6 +12,7 @@ import {
 	REHYDRATE,
 } from 'redux-persist';
 import cartReducer from './cartSlice';
+import productReducer from './productSlice';
 
 const cartPersistConfig = {
 	key: 'cart',
@@ -20,6 +21,7 @@ const cartPersistConfig = {
 
 const rootReducer = combineReducers({
 	cart: persistReducer(cartPersistConfig, cartReducer),
+	products: productReducer,
 });
 
 export const store = configureStore({
